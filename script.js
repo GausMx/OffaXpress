@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const submitBtn = document.getElementById('btnSubmitOrder');
 
   // Phone / WhatsApp Number configuration
-  const WHATSAPP_NUMBER = '2347025669482';
+  const WHATSAPP_NUMBER = '2349123140961';
 
   if (foodForm) {
     foodForm.addEventListener('submit', (e) => {
