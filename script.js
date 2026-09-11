@@ -1,52 +1,52 @@
 /**
- * Offa Xpress - Landing Page Client Logic
- * Handles interactive shopping list formatting and WhatsApp URL generation.
+ * Offa Xpress - Food Delivery MVP Client Logic
+ * Handles interactive food order formatting and WhatsApp URL generation.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const listForm = document.getElementById('shoppingListForm');
-  const shoppingListInput = document.getElementById('shoppingList');
+  const foodForm = document.getElementById('foodOrderForm');
+  const foodOrderInput = document.getElementById('foodOrder');
+  const foodSpotInput = document.getElementById('foodSpot');
   const deliveryLocationInput = document.getElementById('deliveryLocation');
-  const maxBudgetInput = document.getElementById('maxBudget');
   const deliveryTimeSelect = document.getElementById('deliveryTime');
   const extraInstructionsInput = document.getElementById('extraInstructions');
-  const submitBtn = document.getElementById('btnSubmitList');
+  const submitBtn = document.getElementById('btnSubmitOrder');
 
   // Phone / WhatsApp Number configuration
-  const WHATSAPP_NUMBER = '2347059745190';
+  const WHATSAPP_NUMBER = '2347025669482';
 
-  if (listForm) {
-    listForm.addEventListener('submit', (e) => {
+  if (foodForm) {
+    foodForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      sendListToWhatsApp();
+      sendOrderToWhatsApp();
     });
   }
 
   if (submitBtn) {
     submitBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      sendListToWhatsApp();
+      sendOrderToWhatsApp();
     });
   }
 
-  function sendListToWhatsApp() {
-    const listValue = shoppingListInput ? shoppingListInput.value.trim() : '';
+  function sendOrderToWhatsApp() {
+    const foodValue = foodOrderInput ? foodOrderInput.value.trim() : '';
     const locationValue = deliveryLocationInput ? deliveryLocationInput.value.trim() : '';
-    const budgetValue = maxBudgetInput ? maxBudgetInput.value.trim() : '';
+    const spotValue = foodSpotInput ? foodSpotInput.value.trim() : '';
     const timeValue = deliveryTimeSelect ? deliveryTimeSelect.value : 'As soon as possible';
     const extraValue = extraInstructionsInput ? extraInstructionsInput.value.trim() : '';
 
-    // Simple validation
+    // Validation
     let hasError = false;
 
-    if (!listValue) {
-      if (shoppingListInput) {
-        shoppingListInput.classList.add('is-invalid');
-        shoppingListInput.focus();
+    if (!foodValue) {
+      if (foodOrderInput) {
+        foodOrderInput.classList.add('is-invalid');
+        foodOrderInput.focus();
       }
       hasError = true;
     } else {
-      if (shoppingListInput) shoppingListInput.classList.remove('is-invalid');
+      if (foodOrderInput) foodOrderInput.classList.remove('is-invalid');
     }
 
     if (!locationValue) {
@@ -63,22 +63,22 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Build clear formatted message
-    let message = `Hi Offa Xpress 👋\nI'd like to place an order.\n\n🛒 My shopping list:\n${listValue}\n\n`;
+    // Build clear formatted food order message
+    let message = `Hi Offa Xpress! 👋\nI’d like to order food.\n\n🍲 Food order:\n${foodValue}\n\n`;
 
-    if (budgetValue) {
-      message += `💰 Maximum budget:\n${budgetValue}\n\n`;
+    if (spotValue) {
+      message += `🏪 Preferred food spot:\n${spotValue}\n\n`;
     } else {
-      message += `💰 Maximum budget:\nNot specified\n\n`;
+      message += `🏪 Preferred food spot:\nAny good spot in Offa\n\n`;
     }
 
     message += `📍 Delivery location:\n${locationValue}\n\n`;
     message += `🕐 Preferred delivery:\n${timeValue}\n\n`;
 
     if (extraValue) {
-      message += `📝 Extra instructions:\n${extraValue}`;
+      message += `📝 Special notes:\n${extraValue}`;
     } else {
-      message += `📝 Extra instructions:\nNone`;
+      message += `📝 Special notes:\nNone`;
     }
 
     // Encode message safely
@@ -90,10 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Remove validation warnings on typing
-  if (shoppingListInput) {
-    shoppingListInput.addEventListener('input', () => {
-      if (shoppingListInput.value.trim()) {
-        shoppingListInput.classList.remove('is-invalid');
+  if (foodOrderInput) {
+    foodOrderInput.addEventListener('input', () => {
+      if (foodOrderInput.value.trim()) {
+        foodOrderInput.classList.remove('is-invalid');
       }
     });
   }
@@ -106,17 +106,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Mobile navbar toggle & collapse logic (Vanilla JS fallback)
+  const navbarToggler = document.querySelector('.navbar-toggler');
+  const navbarCollapse = document.getElementById('navbarNav');
+
+  if (navbarToggler && navbarCollapse) {
+    navbarToggler.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navbarCollapse.classList.toggle('show');
+      const isExpanded = navbarCollapse.classList.contains('show');
+      navbarToggler.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    });
+  }
+
   // Auto-close mobile navbar on link click
   const navLinks = document.querySelectorAll('.navbar-nav .nav-link, .navbar-nav .btn');
-  const navbarCollapse = document.getElementById('navbarNav');
-  
   if (navLinks && navbarCollapse) {
     navLinks.forEach(link => {
       link.addEventListener('click', () => {
         if (navbarCollapse.classList.contains('show')) {
-          const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
-          if (bsCollapse) {
-            bsCollapse.hide();
+          navbarCollapse.classList.remove('show');
+          if (navbarToggler) {
+            navbarToggler.setAttribute('aria-expanded', 'false');
           }
         }
       });
